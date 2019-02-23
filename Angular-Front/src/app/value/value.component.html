@@ -1,6 +1,6 @@
 <p>
   value is working!
 </p>
-<p>
-  {{values}}
+<p *ngFor="let value of values">
+  {{value.id}},{{value.name}}
 </p>
