@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using angularNet.API.Data;
+using angularNet.API.Dtos;
 using angularNet.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,20 +18,20 @@ namespace angularNet.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register (string username, string password)
+        public async Task<IActionResult> Register (UserForRegisterDto userForRegisterDto)
         {
-            username = username.ToLower();
-            if (await _repo.UserExists(username))
+            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
+            if (await _repo.UserExists(userForRegisterDto.Username))
             {
                 return BadRequest("User name already exists");
             }
 
             var userToCreate = new User
             {
-                Username = username
+                Username = userForRegisterDto.Username
             };
 
-            var createdUser = await _repo.Resigter(userToCreate, password);
+            var createdUser = await _repo.Resigter(userToCreate, userForRegisterDto.Password);
 
             return StatusCode(201);
         }
