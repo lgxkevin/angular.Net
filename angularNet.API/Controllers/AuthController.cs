@@ -47,7 +47,7 @@ namespace angularNet.API.Controllers
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
             //check whether usename and user password was stored in database
-            var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
+            var userFromRepo = await _repo.Login(userForLoginDto.Username, userForLoginDto.Password);
             if (userFromRepo == null)
             {
                 return Unauthorized();

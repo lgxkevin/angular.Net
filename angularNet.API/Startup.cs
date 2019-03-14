@@ -35,12 +35,13 @@ namespace angularNet.API
             services.AddCors();
             //Services will be mmade once per request within the scope
             services.AddScoped<IAuthRepository,AuthRepository>();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options=> {
+            services.AddAuthentication(x=>{x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;}).AddJwtBearer(options=> {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     //options want to validate against
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.
+                    GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
