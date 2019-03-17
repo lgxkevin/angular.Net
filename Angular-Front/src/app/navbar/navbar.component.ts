@@ -20,4 +20,13 @@ export class NavbarComponent implements OnInit {
       console.log('Login error')
     })
   }
+  loggedIn(){
+    const token = localStorage.getItem('token');
+    // if (token) return true; else return false
+    return !!token;
+  }
+  logout(){
+    localStorage.removeItem('token');
+    console.log('logged out');
+  }
 }
