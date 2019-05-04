@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using angularNet.API.Data;
+using angularNet.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +37,12 @@ namespace angularNet.API
             services.AddDbContext<DataContext>(x=>x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
-            //Services will be mmade once per request within the scope
+            //Services will be made once per request within the scope
             services.AddScoped<IAuthRepository,AuthRepository>();
-            services.AddAuthentication(x=>{x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;}).AddJwtBearer(options=> {
+            services.AddAuthentication(x=>{
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                }).AddJwtBearer(options=> {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     //options want to validate against
@@ -59,6 +66,19 @@ namespace angularNet.API
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 //app.UseHsts();
+                app.UseExceptionHandler(builder =>{
+                    builder.Run(async context => {
+                        // get status code
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        // get error details
+                        var error = context.Features.Get<IExceptionHandlerFeature>();
+                        if (error != null){
+                            context.Response.AddApplicationError(error.Error.Message);
+                            await context.Response.WriteAsync(error.Error.Message);
+                        }
+                    });
+                }
+                );
             }
 
             //app.UseHttpsRedirection();

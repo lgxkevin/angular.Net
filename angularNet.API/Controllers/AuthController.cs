@@ -46,6 +46,7 @@ namespace angularNet.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
+            throw new Exception ("Login access denied.");
             //check whether usename and user password was stored in database
             var userFromRepo = await _repo.Login(userForLoginDto.Username, userForLoginDto.Password);
             if (userFromRepo == null)
@@ -61,7 +62,7 @@ namespace angularNet.API.Controllers
             };
             //In order to make sure the token is valid token when it comes back, the server needs to sign the token
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
-            //entrypt key 
+            //encrypt key 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             
             var tokenDescriptor = new SecurityTokenDescriptor
