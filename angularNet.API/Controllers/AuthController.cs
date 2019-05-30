@@ -39,14 +39,13 @@ namespace angularNet.API.Controllers
                 Username = userForRegisterDto.Username
             };
 
-            var createdUser = await _repo.Resigter(userToCreate, userForRegisterDto.Password);
+            var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
 
             return StatusCode(201);
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            throw new Exception ("Login access denied.");
             //check whether usename and user password was stored in database
             var userFromRepo = await _repo.Login(userForLoginDto.Username, userForLoginDto.Password);
             if (userFromRepo == null)

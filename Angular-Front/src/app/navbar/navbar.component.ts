@@ -7,25 +7,25 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  model:any = {};
+  model: any = {};
 
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
   }
-  login(){
-    this.authService.login(this.model).subscribe(next =>{
-      console.log('Logged in')
-    }, error=>{
-      console.log('Login error')
-    })
+  login() {
+    this.authService.login(this.model).subscribe(next => {
+      console.log('Logged in');
+    }, error => {
+      console.log(error);
+    });
   }
-  loggedIn(){
+  loggedIn() {
     const token = localStorage.getItem('token');
     // if (token) return true; else return false
     return !!token;
   }
-  logout(){
+  logout() {
     localStorage.removeItem('token');
     console.log('logged out');
   }
