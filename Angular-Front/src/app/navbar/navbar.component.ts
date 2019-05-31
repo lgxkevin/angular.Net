@@ -9,7 +9,7 @@ import { AlertifyService } from '../services/alertify.service';
 export class NavbarComponent implements OnInit {
   model: any = {};
 
-  constructor(private authService: AuthService, private alertifyService: AlertifyService) { }
+  constructor(public authService: AuthService, private alertifyService: AlertifyService) { }
 
   ngOnInit() {
   }
@@ -21,9 +21,10 @@ export class NavbarComponent implements OnInit {
     });
   }
   loggedIn() {
-    const token = localStorage.getItem('token');
-    // if (token) return true; else return false
-    return !!token;
+    // const token = localStorage.getItem('token');
+    // // if (token) return true; else return false
+    // return !!token;
+    return this.authService.loggedIn();
   }
   logout() {
     localStorage.removeItem('token');
